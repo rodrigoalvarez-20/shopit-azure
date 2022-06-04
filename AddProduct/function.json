@@ -1,0 +1,18 @@
+{
+	"bindings": [
+		{
+			"authLevel": "anonymous",
+			"type": "httpTrigger",
+			"direction": "in",
+			"dataType": "binary",
+			"name": "req",
+			"methods": ["post"],
+			"route": "shopit/products/add"
+		},
+		{
+			"type": "http",
+			"direction": "out",
+			"name": "res"
+		}
+	]
+}

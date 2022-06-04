@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reporte de compra</title>
+	</head>
+	<body>
+		<div style="margin: 12px; text-align: center">
+			<h1 style="color: #7d1e6a">Notificacion de compra en Shopit</h1>
+			<div>
+				<img
+					src="https://shopitapi.blob.core.windows.net/assets/logo.png"
+					width="160"
+					alt="logo Image"
+				/>
+			</div>
+			<div style="text-align: start; font-size: 14pt">
+				<p style="color: #eeb0b0">
+					Estimado cliente <span style="color: #EB5353;">{USER}</span>, este correo es una confirmación de su pedido, junto con la descripción del mismo.
+				</p>
+				<div style="color: #541690; line-height: 0.8;">
+					<p>Fecha de compra: {DATE}.</p>
+					<p>No. de items: {NO_ITEMS}.</p>
+					<p>Total: ${TOTAL}.</p>
+					<p>Items:</p>
+				</div>
+                <div style="margin: 12px;">
+                    {ITEMS}
+                </div>
+			</div>
+			<div style="text-align:start; font-size:medium; color: #242F9B">
+				Atentamente: Equipo de Shopit
+			</div>
+		</div>
+	</body>
+</html>
