@@ -1,7 +1,7 @@
 import make_response from "../utils/make_response.js";
 import get_mongo_instance from "../utils/mongo.js";
-import { compareSync } from "bcryptjs";
 import { generate_token } from "../utils/auth.js";
+import bcryptjs from "bcryptjs";
 
 export default async function (context, req) {
     const { email, password } = req.body;
@@ -24,7 +24,7 @@ export default async function (context, req) {
         const { _id, name } = user_in_db;
         const pwd = user_in_db["password"]
 
-        if(compareSync(password, pwd)){
+        if(bcryptjs.compareSync(password, pwd)){
             const tk = generate_token( _id.toString(), name, email)
             if (!tk){
                 context.res = make_response(500, { "message": "Ha ocurrido un error al generar la token" })

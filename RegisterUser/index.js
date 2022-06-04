@@ -1,6 +1,6 @@
 import make_response from "../utils/make_response.js";
 import get_mongo_instance from "../utils/mongo.js";
-import { hashSync } from "bcryptjs";
+import bcryptjs from "bcryptjs";
 
 export default async function (context, req) {
     const { name, lastname, email, phone, password, gender } = req.body;
@@ -26,7 +26,7 @@ export default async function (context, req) {
             lastname,
             email,
             phone,
-            "password": hashSync(password, 12),
+            "password": bcryptjs.hashSync(password, 12),
             gender
         };
 
