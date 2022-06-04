@@ -1,13 +1,12 @@
 import make_response from "../utils/make_response.js";
 import get_mongo_instance from "../utils/mongo.js";
-import { StatusCodes } from "http-status-codes";
 import { hashSync } from "bcryptjs";
 
 export default async function (context, req) {
     const { name, lastname, email, phone, password, gender } = req.body;
 
     if (!name || !email || !password){
-        context.res = make_response(StatusCodes.BAD_REQUEST, {
+        context.res = make_response(400, {
             "error": "Los campos 'name', 'email' y 'password' son necesarios"
         })
         return context.res
@@ -18,7 +17,7 @@ export default async function (context, req) {
     try {
         const user_in_db = await users_tbl.findOne({"email": email});
         if (user_in_db !== null){
-            context.res = make_response(StatusCodes.BAD_REQUEST, { "error": "El correo ya se encuentra registrado" })
+            context.res = make_response(400, { "error": "El correo ya se encuentra registrado" })
             return context.res;
         }
         
@@ -32,10 +31,10 @@ export default async function (context, req) {
         };
 
         await users_tbl.insertOne(data);
-        context.res = make_response(StatusCodes.OK, { "message": "Se ha registrado el usuario" })
+        context.res = make_response(200, { "message": "Se ha registrado el usuario" })
     } catch (ex) {
         console.log(ex)
-        context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { "error": "Ha ocurrido un error al conectar con la base de datos" })
+        context.res = make_response(500, { "error": "Ha ocurrido un error al conectar con la base de datos" })
     }finally {
         connection.close()
         

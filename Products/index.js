@@ -1,5 +1,4 @@
 
-import { StatusCodes } from "http-status-codes";
 import { validate_request } from "../utils/auth.js"
 import make_response from "../utils/make_response.js"
 import get_mongo_instance from "../utils/mongo.js";
@@ -8,7 +7,7 @@ export default async function (context, req) {
     const req_status = validate_request(req);
 
     if (req_status["status"] === false){
-        context.res = make_response(StatusCodes.BAD_REQUEST, { "error": req_status["error"] })
+        context.res = make_response(400, { "error": req_status["error"] })
         return context.res
     }
 
@@ -24,7 +23,7 @@ export default async function (context, req) {
         }else{
             products_find = await prods_tbl.find({}).toArray();
         }
-        context.res = make_response(StatusCodes.OK, products_find.map(prod => {
+        context.res = make_response(200, products_find.map(prod => {
             return {
                 ...prod,
                 "image": prod["image"] !== "" ? `${process.env["images_route"]}/${prod["image"]}` : ""
@@ -32,7 +31,7 @@ export default async function (context, req) {
         }))
     } catch (ex) {
         console.log(ex)
-        context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { "error": "Ha ocurrido un error al conectar con la base de datos" })
+        context.res = make_response(500, { "error": "Ha ocurrido un error al conectar con la base de datos" })
     } finally {
         connection.close()
     }

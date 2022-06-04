@@ -1,4 +1,3 @@
-import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { validate_request } from "../utils/auth.js"
 import make_response from "../utils/make_response.js"
@@ -9,7 +8,7 @@ export default async (context, req) => {
     const req_status = validate_request(req);
 
     if (req_status["status"] === false) {
-        context.res = make_response(StatusCodes.BAD_REQUEST, { "error": req_status["error"] })
+        context.res = make_response(400, { "error": req_status["error"] })
         return context.res
     }
     const { db, connection } = await get_mongo_instance()
@@ -50,14 +49,14 @@ export default async (context, req) => {
         const bodyEmail = generate_purchase_mail(req_status["data"]["email"], expDate, no_items, total, parsed_prods)
         const status = await send_email(req_status["data"]["email"], "Notificacion de pedido", bodyEmail)
         if (status){
-            context.res = make_response(StatusCodes.OK, { "message": "Se ha generado la compra. Que disfrute su pedido" });
+            context.res = make_response(200, { "message": "Se ha generado la compra. Que disfrute su pedido" });
         }else {
-            context.res = make_response(StatusCodes.OK, { "message": "Se ha generado la compra pero ha ocurrido un error al enviar el correo de notificacion. Lamentamos los inconvenientes." });
+            context.res = make_response(200, { "message": "Se ha generado la compra pero ha ocurrido un error al enviar el correo de notificacion. Lamentamos los inconvenientes." });
         }
         
     }catch(ex){
         console.log(ex)
-        context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { "error": "Ha ocurrido un error al conectar con la base de datos" })
+        context.res = make_response(500, { "error": "Ha ocurrido un error al conectar con la base de datos" })
     }finally{
         connection.close()
     }

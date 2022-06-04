@@ -1,5 +1,4 @@
 
-import { StatusCodes } from "http-status-codes";
 import { validate_request } from "../utils/auth.js"
 import make_response from "../utils/make_response.js"
 import { BlobServiceClient } from "@azure/storage-blob";
@@ -17,7 +16,7 @@ export default async (context, req) => {
     const req_status = validate_request(req);
 
     if (req_status["status"] === false) {
-        context.res = make_response(StatusCodes.BAD_REQUEST, { "error": req_status["error"] })
+        context.res = make_response(400, { "error": req_status["error"] })
         return context.res
     }
     const { db, connection } = await get_mongo_instance()
@@ -25,7 +24,7 @@ export default async (context, req) => {
         const { image, name, sku, description, category, price, stock } = req.body;
 
         if (!name || !sku){
-            context.res = make_response(StatusCodes.BAD_REQUEST, {
+            context.res = make_response(400, {
                 "error": "El nombre y SKU del producto son requeridos"
             })
             return context.res;
@@ -59,17 +58,17 @@ export default async (context, req) => {
         })
 
         if (!prod_inserted["insertedId"]){
-            context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { 
+            context.res = make_response(500, { 
                 "error": "Ha ocurrido un error al crear el producto. Intente de nuevo mas tarde"
             });
             return context.res;
         }
 
-        context.res = make_response(StatusCodes.CREATED, { "message": "Se ha creado el producto" });
+        context.res = make_response(201, { "message": "Se ha creado el producto" });
         return context.res;
     } catch (formError) {
         console.log(formError);
-        context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { "error": "Ha ocurrido un error al procesar la petición" })
+        context.res = make_response(500, { "error": "Ha ocurrido un error al procesar la petición" })
         return context.res;
     }finally {
         connection.close();

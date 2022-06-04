@@ -1,5 +1,4 @@
 
-import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { validate_request } from "../utils/auth.js"
 import make_response from "../utils/make_response.js"
@@ -23,7 +22,7 @@ export default async function (context, req) {
         var user_profile = await users_tbl.findOne({ _id: ObjectId(_id) });
 
         if (user_profile === null){
-            context.res = make_response(StatusCodes.NOT_FOUND, { "error": "No se ha encontrado información del perfil" })
+            context.res = make_response(404, { "error": "No se ha encontrado información del perfil" })
             return context.res;
         }
 
@@ -32,11 +31,11 @@ export default async function (context, req) {
 
         // Agregar el soporte para las compras del usuario
 
-        context.res = make_response(StatusCodes.OK, { ...user_profile })
+        context.res = make_response(200, { ...user_profile })
         
     } catch (ex) {
         console.log(ex)
-        context.res = make_response(StatusCodes.INTERNAL_SERVER_ERROR, { "error": "Ha ocurrido un error al conectar con la base de datos" })
+        context.res = make_response(500, { "error": "Ha ocurrido un error al conectar con la base de datos" })
     } finally {
         connection.close()
     }
