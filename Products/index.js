@@ -19,7 +19,8 @@ export default async function (context, req) {
         var products_find = [];
         console.log(value)
         if (value){
-            products_find = await prods_tbl.find({ "$or": [ {"name": value}, {"category": value} ] }).toArray();
+            products_find = await prods_tbl.find({ "$or": [{ "name": { "$regex": value, "$options": "i" } }, { "category": { "$regex": value, "$options": "i" }
+} ] }).toArray();
         }else{
             products_find = await prods_tbl.find({}).toArray();
         }
